@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Quórum Cívico">
+  <rect width="1600" height="1000" fill="#1C1917"/>
+  <g fill="none" stroke="#D6D3D1" stroke-opacity="0.14">
+    <path d="M200 180 L800 80 L1400 180 L1400 820 L800 920 L200 820 Z"/>
+  </g>
+  <g fill="none" stroke="#A16207" stroke-width="1.2">
+    <path d="M430 360 L800 500 L1170 360"/>
+    <path d="M800 500 L800 760"/>
+    <path d="M430 640 L800 500 L1170 640"/>
+  </g>
+  <g fill="#FAFAF9">
+    <circle cx="430" cy="360" r="5"/><circle cx="1170" cy="360" r="5"/>
+    <circle cx="800" cy="500" r="6"/><circle cx="800" cy="760" r="5"/>
+    <circle cx="430" cy="640" r="5"/><circle cx="1170" cy="640" r="5"/>
+  </g>
+</svg>
