@@ -1,0 +1,1 @@
+import{r as t,j as c,c as a}from"./app-D2Zkr1Li.js";const d=t.forwardRef(({className:r,children:e,...o},s)=>c.jsx("select",{ref:s,className:a("h-11 w-full cursor-pointer rounded-xl border border-border/80 bg-white/70 px-3 text-sm text-foreground backdrop-blur-sm focus:border-accent",r),...o,children:e}));d.displayName="Select";export{d as S};

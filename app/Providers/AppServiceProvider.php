@@ -42,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
 
         $base = $this->detectWebBase();
         $forced = trim((string) env('APP_SUBDIRECTORY', ''), '/');
-        if ($forced !== '') {
+        if ($forced !== '' && $this->requestUsesSubdirectory($forced)) {
             $base = '/'.$forced;
         }
         $basename = $base === '' ? '/' : $base;
@@ -51,6 +51,10 @@ class AppServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             return;
+        }
+
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
         }
 
         $root = request()->getSchemeAndHttpHost().($base === '' ? '' : $base);
@@ -73,5 +77,16 @@ class AppServiceProvider extends ServiceProvider
         }
 
         return $dir === '' || $dir === '/' ? '' : $dir;
+    }
+
+    private function requestUsesSubdirectory(string $subdirectory): bool
+    {
+        $prefix = '/'.$subdirectory;
+        $scriptName = str_replace('\\', '/', $_SERVER['SCRIPT_NAME'] ?? '');
+        $requestPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+
+        return str_starts_with($scriptName, $prefix.'/')
+            || str_starts_with($requestPath, $prefix.'/')
+            || $requestPath === $prefix;
     }
 }

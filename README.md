@@ -76,6 +76,52 @@ Abre `http://127.0.0.1:8000`.
 
 Con XAMPP, con `npm run build` basta con entrar a `http://localhost/quilab`.
 
+## Despliegue en Hostinger (quilab.co)
+
+El `.env` **no** viaja por Git. Créalo en el Administrador de archivos de hPanel, en la raíz del proyecto (junto a `artisan`), y deja `APP_SUBDIRECTORY` vacío porque el dominio apunta a la raíz.
+
+```
+APP_NAME=QUILAB
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://quilab.co
+APP_SUBDIRECTORY=
+ASSET_URL=
+APP_KEY=base64:PEGA_AQUI_LA_CLAVE
+
+APP_LOCALE=es
+APP_FALLBACK_LOCALE=en
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=u336988965_quilab
+DB_USERNAME=u336988965_quilab
+DB_PASSWORD=
+
+SESSION_DRIVER=database
+SESSION_PATH=/
+SESSION_DOMAIN=.quilab.co
+CACHE_STORE=database
+QUEUE_CONNECTION=database
+FILESYSTEM_DISK=public
+
+SANCTUM_STATEFUL_DOMAINS=quilab.co,www.quilab.co
+```
+
+En la terminal de hPanel, desde la carpeta del proyecto:
+
+```bash
+php artisan key:generate --force
+php artisan migrate --force --seed
+php artisan storage:link
+php artisan config:clear
+php artisan route:clear
+php artisan view:clear
+```
+
+Asegúrate de que Composer se ejecute en el despliegue Git y de que `storage/` y `bootstrap/cache/` tengan permiso de escritura.
+
 ## Usuario administrador de prueba
 
 | Rol | Email | Contraseña |
