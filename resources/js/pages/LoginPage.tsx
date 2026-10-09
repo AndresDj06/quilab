@@ -6,6 +6,7 @@ import { Field, Input } from '@/components/ui/input';
 import { Seo } from '@/components/Seo';
 import { PlasmaWave } from '@/components/PlasmaWave';
 import { loginErrorMessage, useAuth } from '@/context/AuthContext';
+import { useCreative } from '@/context/CreativeContext';
 import { ShieldCheck, Terminal, ArrowLeft, Lock } from 'lucide-react';
 
 export default function LoginPage() {

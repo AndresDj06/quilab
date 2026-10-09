@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import { Seo } from '@/components/Seo';
 import { Hero } from '@/features/landing/Hero';
-import { StatsSection } from '@/features/landing/StatsSection';
 import { ProjectsPreview } from '@/features/landing/ProjectsPreview';
 import { About } from '@/features/landing/About';
 import { Services } from '@/features/landing/Services';
@@ -23,10 +22,7 @@ export default function LandingPage() {
     return (
         <>
             <Seo description="QUILAB — Consorcio de desarrollo de software, arquitectura moderna y soluciones digitales de alto impacto." />
-            <Hero />
-            
-            {/* Stats section with DarkVeil background and reflective liquid glass cards */}
-            <StatsSection stats={data?.stats} />
+            <Hero stats={data?.stats} />
 
             {/* Mainpage sections on clean white / light background */}
             <ProjectsPreview projects={data?.projects ?? []} loading={loading} />
