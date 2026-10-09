@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from '@/context/AuthContext';
 import { ToastProvider } from '@/context/ToastContext';
+import { CreativeProvider } from '@/context/CreativeContext';
 import PublicLayout from '@/layouts/PublicLayout';
 import { appRoot } from '@/lib/api';
 import '../css/app.css';
@@ -22,6 +23,7 @@ const AdminMembersPage = lazy(() => import('@/pages/admin/AdminMembersPage'));
 const MemberFormPage = lazy(() => import('@/pages/admin/MemberFormPage'));
 const AdminUsersPage = lazy(() => import('@/pages/admin/AdminUsersPage'));
 const AdminMessagesPage = lazy(() => import('@/pages/admin/AdminMessagesPage'));
+const CreativePage = lazy(() => import('@/pages/admin/CreativePage'));
 
 const ADMIN_ACCESS_SLUG = (import.meta.env.VITE_ADMIN_ACCESS_SLUG as string) || 'acceso-consorcio';
 
@@ -32,38 +34,41 @@ function Fallback() {
 createRoot(document.getElementById('app')!).render(
     <AuthProvider>
         <ToastProvider>
-            <BrowserRouter basename={appRoot === '' ? undefined : appRoot}>
-                <Suspense fallback={<Fallback />}>
-                    <Routes>
-                        <Route element={<PublicLayout />}>
-                            <Route path="/" element={<LandingPage />} />
-                            <Route path="/proyectos" element={<ProjectsPage />} />
-                            <Route path="/proyectos/:slug" element={<ProjectDetailPage />} />
-                            <Route path="/nosotros" element={<AboutPage />} />
-                            <Route path="/equipo" element={<TeamPage />} />
-                            <Route path="/contacto" element={<ContactPage />} />
-                        </Route>
+            <CreativeProvider>
+                <BrowserRouter basename={appRoot === '' ? undefined : appRoot}>
+                    <Suspense fallback={<Fallback />}>
+                        <Routes>
+                            <Route element={<PublicLayout />}>
+                                <Route path="/" element={<LandingPage />} />
+                                <Route path="/proyectos" element={<ProjectsPage />} />
+                                <Route path="/proyectos/:slug" element={<ProjectDetailPage />} />
+                                <Route path="/nosotros" element={<AboutPage />} />
+                                <Route path="/equipo" element={<TeamPage />} />
+                                <Route path="/contacto" element={<ContactPage />} />
+                            </Route>
 
-                        {/* WPS Hide Login - Ruta secreta configurada */}
-                        <Route path={`/${ADMIN_ACCESS_SLUG}`} element={<LoginPage />} />
-                        {/* Trampa: intento de acceso a /login redirige al Home simulando inexistencia */}
-                        <Route path="/login" element={<Navigate to="/" replace />} />
+                            {/* WPS Hide Login - Ruta secreta configurada */}
+                            <Route path={`/${ADMIN_ACCESS_SLUG}`} element={<LoginPage />} />
+                            {/* Trampa: intento de acceso a /login redirige al Home simulando inexistencia */}
+                            <Route path="/login" element={<Navigate to="/" replace />} />
 
-                        <Route path="/admin" element={<AdminLayout />}>
-                            <Route index element={<DashboardPage />} />
-                            <Route path="proyectos" element={<AdminProjectsPage />} />
-                            <Route path="proyectos/nuevo" element={<ProjectFormPage />} />
-                            <Route path="proyectos/:id/editar" element={<ProjectFormPage />} />
-                            <Route path="miembros" element={<AdminMembersPage />} />
-                            <Route path="miembros/nuevo" element={<MemberFormPage />} />
-                            <Route path="miembros/:id/editar" element={<MemberFormPage />} />
-                            <Route path="usuarios" element={<AdminUsersPage />} />
-                            <Route path="mensajes" element={<AdminMessagesPage />} />
-                        </Route>
-                        <Route path="*" element={<Navigate to="/" replace />} />
-                    </Routes>
-                </Suspense>
-            </BrowserRouter>
+                            <Route path="/admin" element={<AdminLayout />}>
+                                <Route index element={<DashboardPage />} />
+                                <Route path="proyectos" element={<AdminProjectsPage />} />
+                                <Route path="proyectos/nuevo" element={<ProjectFormPage />} />
+                                <Route path="proyectos/:id/editar" element={<ProjectFormPage />} />
+                                <Route path="miembros" element={<AdminMembersPage />} />
+                                <Route path="miembros/nuevo" element={<MemberFormPage />} />
+                                <Route path="miembros/:id/editar" element={<MemberFormPage />} />
+                                <Route path="usuarios" element={<AdminUsersPage />} />
+                                <Route path="mensajes" element={<AdminMessagesPage />} />
+                                <Route path="creative" element={<CreativePage />} />
+                            </Route>
+                            <Route path="*" element={<Navigate to="/" replace />} />
+                        </Routes>
+                    </Suspense>
+                </BrowserRouter>
+            </CreativeProvider>
         </ToastProvider>
     </AuthProvider>,
 );

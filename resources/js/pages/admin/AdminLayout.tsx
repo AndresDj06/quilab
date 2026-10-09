@@ -28,6 +28,7 @@ export default function AdminLayout() {
                             <Link to="/admin">Home</Link>
                             <Link to="/admin/proyectos">Proyectos</Link>
                             <Link to="/admin/miembros">Equipo</Link>
+                            <Link to="/admin/creative">Creative</Link>
                         </nav>
                     </div>
                     <div className="flex items-center gap-4 text-sm">

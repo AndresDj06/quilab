@@ -3,6 +3,7 @@ import GlowCursor from '@/components/GlowCursor';
 import TechText from '@/components/TechText';
 import VaporType from '@/components/VaporType';
 import SpecularButton from '@/components/SpecularButton';
+import { useCreative } from '@/context/CreativeContext';
 import { ArrowRight, Code2, Cpu, Database, Layers } from 'lucide-react';
 
 const techBadges = [
@@ -13,26 +14,26 @@ const techBadges = [
 ];
 
 export function Hero() {
+    const { config } = useCreative();
+
     return (
         <section className="relative min-h-[calc(100vh-4rem)] min-h-[calc(100dvh-4rem)] bg-[#050610] text-white flex flex-col justify-center overflow-hidden">
             <HeroGrid />
 
             <GlowCursor
-                color="#67E8F9"
-                secondaryColor="#A78BFA"
-                trailLength={40}
-                trailWidth={8}
-                trailTaper={0.8}
-                followSpeed={0.16}
-                glowIntensity={1.9}
-                glowSpread={1.2}
-                hotspot={0.65}
-                brightness={1.25}
-                opacity={1}
-                pulseSpeed={1.1}
-                noiseStrength={0.035}
-                idleFade
-                idleTimeout={700}
+                color={config.glowCursor.color1}
+                secondaryColor={config.glowCursor.color2}
+                trailLength={config.glowCursor.trailLength}
+                trailWidth={config.glowCursor.trailWidth}
+                trailTaper={config.glowCursor.trailTaper}
+                followSpeed={config.glowCursor.followSpeed}
+                glowIntensity={config.glowCursor.glowIntensity}
+                glowSpread={config.glowCursor.glowSpread}
+                brightness={config.glowCursor.brightness}
+                pulseSpeed={config.glowCursor.pulseSpeed}
+                noiseStrength={config.glowCursor.noiseStrength}
+                idleFade={config.glowCursor.idleFade}
+                idleTimeout={config.glowCursor.idleTimeout}
                 fadeDuration={900}
                 blendMode="screen"
                 className="relative z-10 flex-1 flex flex-col justify-center"
@@ -47,16 +48,16 @@ export function Hero() {
                                 <VaporType
                                     align="start"
                                     words={['alto impacto', 'gran alcance', 'alto rendimiento', 'gran valor']}
-                                    color="#38bdf8"
-                                    vaporColor="#67e8f9"
+                                    color={config.vaporType.color}
+                                    vaporColor={config.vaporType.vaporColor}
                                     sweep="left"
-                                    spread={1.3}
-                                    rise={1.1}
-                                    turbulence={0.8}
-                                    density={1.3}
-                                    condense={1.5}
-                                    hold={2.4}
-                                    dissolve={1.7}
+                                    spread={config.vaporType.spread}
+                                    rise={config.vaporType.rise}
+                                    turbulence={config.vaporType.turbulence}
+                                    density={config.vaporType.density}
+                                    condense={config.vaporType.condense}
+                                    hold={config.vaporType.hold}
+                                    dissolve={config.vaporType.dissolve}
                                     className="font-bold text-sky-400 drop-shadow-[0_0_15px_rgba(56,189,248,0.35)]"
                                 />{' '}
                                 <span className="inline-block">y arquitectura escalable.</span>

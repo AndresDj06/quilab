@@ -10,6 +10,7 @@ export function Sidebar() {
         { to: '/admin/proyectos', label: 'Proyectos' },
         { to: '/admin/miembros', label: 'Miembros' },
         { to: '/admin/mensajes', label: 'Mensajes' },
+        { to: '/admin/creative', label: 'Creative', end: false },
         ...(user?.role === 'editor' ? [] : [{ to: '/admin/usuarios', label: 'Usuarios', end: false }]),
     ];
     return (

@@ -10,6 +10,7 @@ import { ShieldCheck, Terminal, ArrowLeft, Lock } from 'lucide-react';
 
 export default function LoginPage() {
     const { user, loading, login } = useAuth();
+    const { config } = useCreative();
     const navigate = useNavigate();
     const [error, setError] = useState('');
     const [submitting, setSubmitting] = useState(false);
@@ -42,14 +43,15 @@ export default function LoginPage() {
                 {/* Plasma Wave Canvas */}
                 <div className="absolute inset-0 z-0">
                     <PlasmaWave
-                        colors={['#A855F7', '#06B6D4']}
-                        speed1={0.05}
-                        speed2={0.05}
-                        focalLength={0.8}
-                        bend1={1}
-                        bend2={0.5}
+                        colors={[config.plasmaWave.color1, config.plasmaWave.color2]}
+                        speed1={config.plasmaWave.warpSpeed * 0.025}
+                        speed2={config.plasmaWave.timeSpeed * 0.01}
+                        focalLength={config.plasmaWave.zoom}
+                        bend1={config.plasmaWave.warpStrength}
+                        bend2={config.plasmaWave.blendSoftness * 10}
                         dir2={1.0}
-                        rotationDeg={0}
+                        rotationDeg={config.plasmaWave.rotationAmount}
+                        lightMode={config.plasmaWave.lightMode}
                     />
 
                     {/* Atmospheric gradient vignettes */}

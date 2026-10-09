@@ -74,7 +74,11 @@ export default function ProjectsPage() {
                     {!loading && projects.length === 0 ? (
                         <EmptyState title="Nada en este corte" body="Prueba otro filtro. El archivo público solo muestra proyectos publicados." />
                     ) : (
-                        projects.map((project, index) => <ProjectCard key={project.id} project={project} index={index} />)
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+                            {projects.map((project, index) => (
+                                <ProjectCard key={project.id} project={project} index={index} layout="grid" />
+                            ))}
+                        </div>
                     )}
                 </div>
             </div>
