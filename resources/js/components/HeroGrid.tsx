@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export function HeroGrid() {
+export function HeroGrid({ transparent = false }: { transparent?: boolean } = {}) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
     useEffect(() => {
@@ -202,10 +202,16 @@ export function HeroGrid() {
     }, []);
 
     return (
-        <div className="absolute inset-0 h-full w-full overflow-hidden bg-[#050610] pointer-events-none" aria-hidden="true">
+        <div
+            className={`absolute inset-0 h-full w-full overflow-hidden pointer-events-none ${
+                transparent ? 'bg-transparent' : 'bg-[#050610]'
+            }`}
+            aria-hidden="true"
+        >
             <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
-            {/* Seamless bottom vignette fading into #050610 */}
-            <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050610] via-[#050610]/80 to-transparent" />
+            {!transparent && (
+                <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#050610] via-[#050610]/80 to-transparent" />
+            )}
         </div>
     );
 }

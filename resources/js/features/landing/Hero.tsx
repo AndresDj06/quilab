@@ -60,10 +60,32 @@ export function Hero({ stats }: HeroProps) {
 
     return (
         <section className="relative bg-[#050610] text-white overflow-hidden">
-            <HeroGrid />
+            {/* Unified Combined Background for the Entire Hero and Stats */}
+            <div className="pointer-events-none absolute inset-0 z-0">
+                {/* 1. DarkVeil WebGL Procedural Shader Canvas across the full Hero */}
+                <div className="absolute inset-0 opacity-75">
+                    <DarkVeil
+                        hueShift={config.darkVeil.hueShift}
+                        speed={config.darkVeil.speed}
+                        scanlineFrequency={config.darkVeil.scanlineFrequency}
+                        warpAmount={config.darkVeil.warpAmount}
+                        noiseIntensity={config.darkVeil.noiseIntensity}
+                        scanlineIntensity={config.darkVeil.scanlineIntensity}
+                        resolutionScale={config.darkVeil.resolutionScale}
+                        lightMode={config.darkVeil.lightMode}
+                    />
+                </div>
+
+                {/* 2. Overlaid Parametric Grid & Node Network on transparent canvas */}
+                <HeroGrid transparent={true} />
+
+                {/* 3. Smooth Atmospheric Depth and Color Grading */}
+                <div className="absolute inset-0 bg-gradient-to-b from-[#050610]/80 via-[#050610]/45 to-[#050610]/85" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_35%,transparent_25%,rgba(5,6,16,0.65)_100%)]" />
+            </div>
 
             {/* Viewport 1: Hero Main Stage (Fills 100% of the screen/tab on load) */}
-            <div className="relative min-h-[calc(100vh-4rem)] min-h-[calc(100dvh-4rem)] flex flex-col justify-center">
+            <div className="relative z-10 min-h-[calc(100vh-4rem)] min-h-[calc(100dvh-4rem)] flex flex-col justify-center">
                 <GlowCursor
                     color={config.glowCursor.color1}
                     secondaryColor={config.glowCursor.color2}
@@ -179,26 +201,9 @@ export function Hero({ stats }: HeroProps) {
                 </GlowCursor>
             </div>
 
-            {/* Integral Part of Hero: Liquid Glass Stats with Reflective Edges and DarkVeil Shader */}
-            <div className="relative z-10 w-full border-t border-white/10 pt-10 pb-16 lg:pt-14 lg:pb-20 overflow-hidden">
-                {/* DarkVeil Background Canvas */}
-                <div className="pointer-events-none absolute inset-0 z-0 opacity-75">
-                    <DarkVeil
-                        hueShift={config.darkVeil.hueShift}
-                        speed={config.darkVeil.speed}
-                        scanlineFrequency={config.darkVeil.scanlineFrequency}
-                        warpAmount={config.darkVeil.warpAmount}
-                        noiseIntensity={config.darkVeil.noiseIntensity}
-                        scanlineIntensity={config.darkVeil.scanlineIntensity}
-                        resolutionScale={config.darkVeil.resolutionScale}
-                        lightMode={config.darkVeil.lightMode}
-                    />
-                    {/* Atmospheric gradient overlay for depth, contrast and fluid blending */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#050610]/75 via-[#050610]/40 to-[#050610]/85" />
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(5,6,16,0.65)_100%)]" />
-                </div>
-
-                <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-8">
+            {/* Continuous Second Fold: Liquid Glass Stats Sharing the Same Unified Background */}
+            <div className="relative z-10 w-full pt-4 pb-16 lg:pt-8 lg:pb-24">
+                <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
                     <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-7">
                         {statsList.map((item, index) => {
                             const Icon = item.icon;
