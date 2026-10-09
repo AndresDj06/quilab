@@ -14,6 +14,7 @@ use App\Models\Category;
 use App\Models\ContactMessage;
 use App\Models\Member;
 use App\Models\Project;
+use App\Models\ProjectImage;
 use App\Models\Technology;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,10 +25,10 @@ class PublicController extends Controller
     {
         $projects = Project::query()
             ->published()
-            ->with(['category', 'technologies'])
+            ->with(['category', 'technologies', 'images'])
             ->withCount('members')
             ->ordered()
-            ->limit(5)
+            ->limit(6)
             ->get();
 
         $members = Member::query()
@@ -37,9 +38,67 @@ class PublicController extends Controller
             ->ordered()
             ->get();
 
+        $galleryImages = ProjectImage::query()
+            ->whereHas('project', fn ($q) => $q->published())
+            ->with('project:id,name,slug,title')
+            ->orderBy('position')
+            ->get();
+
+        $carouselItems = $galleryImages->map(fn ($img) => [
+            'src' => $img->url,
+            'alt' => $img->alt ?: ($img->project?->name ?? 'Captura de proyecto'),
+            'title' => $img->caption ?: ($img->project?->name ?? 'Proyecto'),
+            'subtitle' => $img->project?->title ?? 'QUILAB Software Consortium',
+            'project_slug' => $img->project?->slug,
+        ])->values()->all();
+
+        if (count($carouselItems) < 3) {
+            foreach ($projects as $proj) {
+                if ($proj->cover_url) {
+                    $carouselItems[] = [
+                        'src' => $proj->cover_url,
+                        'alt' => $proj->name,
+                        'title' => $proj->name,
+                        'subtitle' => $proj->title ?: 'QUILAB Project Pod',
+                        'project_slug' => $proj->slug,
+                    ];
+                }
+            }
+        }
+
+        if (empty($carouselItems)) {
+            $carouselItems = [
+                [
+                    'src' => 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80&auto=format&fit=max',
+                    'alt' => 'Analytics & Data Platform',
+                    'title' => 'Nexus Analytics Core',
+                    'subtitle' => 'Data Lakehouse & Real-time Metrics',
+                ],
+                [
+                    'src' => 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80&auto=format&fit=max',
+                    'alt' => 'Cloud Infrastructure Mesh',
+                    'title' => 'KubeMesh Orchestrator',
+                    'subtitle' => 'Distributed Multi-Region Deployment',
+                ],
+                [
+                    'src' => 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&q=80&auto=format&fit=max',
+                    'alt' => 'Cybersecurity & Auth Gateway',
+                    'title' => 'CipherShield Gateway',
+                    'subtitle' => 'Zero-Trust Protocol Engine',
+                ],
+                [
+                    'src' => 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80&auto=format&fit=max',
+                    'alt' => 'AI Neural Engine',
+                    'title' => 'Synapse Cognitive Engine',
+                    'subtitle' => 'LLM Orchestration & Inference',
+                ],
+            ];
+        }
+
         return response()->json([
             'projects' => ProjectCardResource::collection($projects),
             'members' => MemberResource::collection($members),
+            'showcase_items' => $carouselItems,
             'stats' => [
                 'projects' => Project::query()->published()->count(),
                 'members' => Member::query()->active()->count(),
@@ -100,6 +159,7 @@ class PublicController extends Controller
         $members = Member::query()
             ->active()
             ->with(['technologies', 'projects' => fn ($query) => $query->published()->ordered()])
+            ->withCount(['projects as projects_count' => fn ($query) => $query->where('is_published', true)])
             ->ordered()
             ->get();
 

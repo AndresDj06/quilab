@@ -35,6 +35,7 @@ class MemberRequest extends FormRequest
             'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp,avif', 'max:4096'],
             'technologies' => ['nullable', 'array', 'max:30'],
             'technologies.*' => ['integer', Rule::exists('technologies', 'id')],
+            'projects' => ['nullable', 'array', 'max:50'],
         ];
     }
 
@@ -45,6 +46,14 @@ class MemberRequest extends FormRequest
             $decoded = json_decode($value, true);
             if (json_last_error() === JSON_ERROR_NONE) {
                 $this->merge(['technologies' => $decoded]);
+            }
+        }
+
+        $projects = $this->input('projects');
+        if (is_string($projects)) {
+            $decoded = json_decode($projects, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $this->merge(['projects' => $decoded]);
             }
         }
 

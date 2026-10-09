@@ -133,9 +133,18 @@ export type Paginated<T> = {
     };
 };
 
+export type CarouselItem = {
+    src: string;
+    alt?: string;
+    title?: string;
+    subtitle?: string;
+    project_slug?: string;
+};
+
 export type LandingPayload = {
     projects: ProjectCard[];
     members: Member[];
+    showcase_items?: CarouselItem[];
     stats: {
         projects: number;
         members: number;

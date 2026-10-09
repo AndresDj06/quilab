@@ -42,9 +42,10 @@ class MemberController extends Controller
 
         $member = Member::query()->create($this->payload($request));
         $member->technologies()->sync($request->input('technologies', []));
+        $this->syncProjects($member, $request);
 
         return response()->json([
-            'member' => new MemberResource($member->load('technologies')->loadCount('projects')),
+            'member' => new MemberResource($member->load(['technologies', 'projects'])->loadCount('projects')),
         ], 201);
     }
 
@@ -54,7 +55,7 @@ class MemberController extends Controller
 
         return response()->json([
             'member' => new MemberResource(
-                $member->load(['technologies', 'projects.category', 'projects.technologies'])
+                $member->load(['technologies', 'projects.category', 'projects.technologies'])->loadCount('projects')
             ),
         ]);
     }
@@ -67,6 +68,7 @@ class MemberController extends Controller
         if ($request->exists('technologies')) {
             $member->technologies()->sync($request->input('technologies', []));
         }
+        $this->syncProjects($member, $request);
 
         return response()->json([
             'member' => new MemberResource(
@@ -85,9 +87,27 @@ class MemberController extends Controller
         return response()->json(['ok' => true]);
     }
 
+    private function syncProjects(Member $member, MemberRequest $request): void
+    {
+        if ($request->exists('projects')) {
+            $rawProjects = $request->input('projects', []);
+            $syncData = [];
+            foreach ($rawProjects as $item) {
+                $projId = is_array($item) ? ($item['id'] ?? $item['project_id'] ?? null) : $item;
+                if ($projId) {
+                    $syncData[(int) $projId] = [
+                        'role' => is_array($item) ? ($item['role'] ?? null) : null,
+                        'responsibility' => is_array($item) ? ($item['responsibility'] ?? null) : null,
+                    ];
+                }
+            }
+            $member->projects()->sync($syncData);
+        }
+    }
+
     private function payload(MemberRequest $request, ?Member $member = null): array
     {
-        $data = $request->safe()->except(['photo', 'technologies']);
+        $data = $request->safe()->except(['photo', 'technologies', 'projects']);
 
         if ($request->hasFile('photo')) {
             $data['photo'] = Media::replace($member?->photo, $request->file('photo'), 'members');

@@ -31,8 +31,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                         role="status"
                         className={
                             item.tone === 'error'
-                                ? 'glass-panel rounded-2xl border-destructive/30 px-4 py-3 text-sm text-destructive'
-                                : 'glass-nav-dark rounded-2xl px-4 py-3 text-sm text-white'
+                                ? 'border border-destructive/30 bg-white px-4 py-3 text-sm text-destructive shadow-lg'
+                                : 'border border-border bg-ink px-4 py-3 text-sm text-white shadow-lg'
                         }
                     >
                         {item.title}

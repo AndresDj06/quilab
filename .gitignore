@@ -11,6 +11,10 @@
 /.phpunit.cache
 /.vscode
 /.zed
+/.agents
+/.codex
+/.cursor
+skills-lock.json
 /auth.json
 /node_modules
 /public/hot

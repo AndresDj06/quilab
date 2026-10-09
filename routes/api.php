@@ -40,6 +40,7 @@ Route::middleware(['auth', 'active'])->prefix('admin')->group(function (): void 
     Route::post('/projects/{project}/publish', [ProjectController::class, 'publish']);
     Route::post('/projects/{project}/feature', [ProjectController::class, 'feature']);
     Route::post('/projects/{project}/images', [ProjectController::class, 'storeImage']);
+    Route::put('/projects/{project}/images/{image}', [ProjectController::class, 'updateImage']);
     Route::delete('/projects/{project}/images/{image}', [ProjectController::class, 'destroyImage']);
 
     Route::get('/members', [MemberController::class, 'index']);

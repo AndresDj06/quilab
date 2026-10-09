@@ -12,7 +12,7 @@ export default function AdminLayout() {
     }
 
     if (!user) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/" replace />;
     }
 
     return (
@@ -39,7 +39,7 @@ export default function AdminLayout() {
                             size="sm"
                             onClick={async () => {
                                 await logout();
-                                navigate('/login');
+                                navigate('/');
                             }}
                         >
                             Salir

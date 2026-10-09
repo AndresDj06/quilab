@@ -1,19 +1,78 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
-export function BrandLogo({ inverted = false, compact = false }: { inverted?: boolean; compact?: boolean }) {
+export function BrandLogo({
+    inverted = false,
+    compact = false,
+    className = '',
+}: {
+    inverted?: boolean;
+    compact?: boolean;
+    className?: string;
+}) {
+    const [hovered, setHovered] = useState(false);
+
     return (
-        <Link to="/" className="group flex items-center gap-3" aria-label="QUILAB, inicio">
-            <span className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-lg border border-current/40">
-                <span className="absolute inset-0 bg-gradient-to-br from-gold/30 via-transparent to-teal/30 opacity-80" />
-                <span className={cn('absolute left-1 top-1 h-2 w-2 rounded-[2px]', inverted ? 'bg-white' : 'bg-foreground')} />
-                <span className="absolute bottom-1.5 right-1.5 h-1.5 w-1.5 rounded-[2px] bg-accent" />
+        <Link
+            to="/"
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            className={cn(
+                'group inline-flex items-center gap-1.5 font-mono select-none transition-all duration-300',
+                className,
+            )}
+            aria-label="quilab.co — Consorcio de desarrollo de software"
+        >
+            {/* Opening Bracket < */}
+            <span
+                className={cn(
+                    'text-xl font-bold transition-all duration-300 transform inline-block',
+                    hovered
+                        ? '-translate-x-1 text-sky-400 drop-shadow-[0_0_10px_rgba(56,189,248,0.7)]'
+                        : inverted
+                          ? 'text-sky-300/80'
+                          : 'text-sky-600',
+                )}
+            >
+                &lt;
             </span>
-            {!compact ? (
-                <span className={cn('text-sm font-semibold tracking-[0.28em]', inverted ? 'text-white' : 'text-foreground')}>
-                    QUILAB
+
+            {/* Core Domain Brand */}
+            <span
+                className={cn(
+                    'font-display font-bold tracking-tight text-lg transition-colors duration-300',
+                    inverted ? 'text-white' : 'text-primary',
+                )}
+            >
+                quilab
+                <span
+                    className={cn(
+                        'transition-colors duration-300 font-semibold',
+                        hovered
+                            ? 'text-sky-400'
+                            : inverted
+                              ? 'text-sky-300/90'
+                              : 'text-sky-600',
+                    )}
+                >
+                    .co
                 </span>
-            ) : null}
+            </span>
+
+            {/* Closing Bracket > */}
+            <span
+                className={cn(
+                    'text-xl font-bold transition-all duration-300 transform inline-block',
+                    hovered
+                        ? 'translate-x-1 text-sky-400 drop-shadow-[0_0_10px_rgba(56,189,248,0.7)]'
+                        : inverted
+                          ? 'text-sky-300/80'
+                          : 'text-sky-600',
+                )}
+            >
+                &gt;
+            </span>
         </Link>
     );
 }

@@ -30,7 +30,7 @@ class MemberResource extends JsonResource
             'is_featured' => $this->is_featured,
             'position' => $this->position,
             'technologies' => TechnologyResource::collection($this->whenLoaded('technologies')),
-            'projects_count' => $this->whenCounted('projects'),
+            'projects_count' => $this->projects_count ?? ($this->relationLoaded('projects') ? $this->projects->count() : $this->projects()->count()),
             'projects' => ProjectCardResource::collection($this->whenLoaded('projects')),
             // Present when the member is loaded through a project relation.
             'pivot' => $this->whenPivotLoaded('project_member', fn () => [

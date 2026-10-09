@@ -122,13 +122,18 @@ class ProjectController extends Controller
         $this->authorize('update', $project);
 
         $request->validate([
-            'image' => ['required', 'image', 'mimes:jpg,jpeg,png,webp,avif', 'max:5120'],
+            'image' => ['required_without:url', 'nullable', 'image', 'mimes:jpg,jpeg,png,webp,avif', 'max:5120'],
+            'url' => ['required_without:image', 'nullable', 'string', 'max:2048'],
             'caption' => ['nullable', 'string', 'max:200'],
             'alt' => ['nullable', 'string', 'max:200'],
         ]);
 
+        $path = $request->hasFile('image')
+            ? Media::store($request->file('image'), 'projects/gallery')
+            : $request->input('url');
+
         $image = $project->images()->create([
-            'path' => Media::store($request->file('image'), 'projects/gallery'),
+            'path' => $path,
             'caption' => $request->input('caption'),
             'alt' => $request->input('alt') ?: $project->name,
             'position' => ($project->images()->max('position') ?? 0) + 1,
@@ -137,6 +142,37 @@ class ProjectController extends Controller
         return response()->json([
             'image' => new ProjectImageResource($image),
         ], 201);
+    }
+
+    public function updateImage(Request $request, Project $project, ProjectImage $image): JsonResponse
+    {
+        $this->authorize('update', $project);
+        abort_unless($image->project_id === $project->id, 404);
+
+        $validated = $request->validate([
+            'caption' => ['nullable', 'string', 'max:200'],
+            'alt' => ['nullable', 'string', 'max:200'],
+            'url' => ['nullable', 'string', 'max:2048'],
+        ]);
+
+        if (!empty($validated['url']) && $validated['url'] !== $image->path) {
+            Media::delete($image->path);
+            $image->path = $validated['url'];
+        }
+
+        if (array_key_exists('caption', $validated)) {
+            $image->caption = $validated['caption'];
+        }
+
+        if (array_key_exists('alt', $validated)) {
+            $image->alt = $validated['alt'];
+        }
+
+        $image->save();
+
+        return response()->json([
+            'image' => new ProjectImageResource($image),
+        ]);
     }
 
     public function destroyImage(Project $project, ProjectImage $image): JsonResponse

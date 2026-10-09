@@ -4,6 +4,7 @@ import { api } from '@/lib/api';
 import { Seo } from '@/components/Seo';
 import { MemberCard } from '@/components/MemberCard';
 import { Skeleton } from '@/components/ui/skeleton';
+import FlexCarousel from '@/components/FlexCarousel';
 import type { Project, ProjectCard } from '@/types';
 
 export default function ProjectDetailPage() {
@@ -44,25 +45,24 @@ export default function ProjectDetailPage() {
     return (
         <article className="bg-background">
             <Seo title={project.name} description={project.meta_description || project.summary} />
-            <header className="relative overflow-hidden bg-ink text-white">
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_420px_at_80%_0%,rgba(46,196,182,0.16),transparent),radial-gradient(700px_400px_at_0%_80%,rgba(232,197,106,0.14),transparent)]" />
-                <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-16 lg:grid-cols-12 lg:px-8 lg:py-24">
+            <header className="bg-ink text-white">
+                <div className="mx-auto grid max-w-6xl gap-10 px-5 py-16 lg:grid-cols-12 lg:px-8 lg:py-24">
                     <div className="lg:col-span-7">
-                        <p className="section-index !text-teal/80">{project.reference}</p>
+                        <p className="section-index text-white/50">{project.reference}</p>
                         <h1 className="mt-4 font-display text-5xl leading-none lg:text-7xl">{project.name}</h1>
-                        <p className="mt-6 max-w-xl text-white/70">{project.title}</p>
+                        <p className="mt-6 max-w-xl text-white/65">{project.title}</p>
                     </div>
-                    <dl className="glass-panel-dark grid content-end gap-4 rounded-3xl p-6 text-sm lg:col-span-4 lg:col-start-9">
+                    <dl className="grid content-end gap-4 text-sm lg:col-span-4 lg:col-start-9">
                         <div>
-                            <dt className="section-index !text-white/50">Estado</dt>
+                            <dt className="section-index text-white/40">Estado</dt>
                             <dd>{project.status_label}</dd>
                         </div>
                         <div>
-                            <dt className="section-index !text-white/50">Año</dt>
+                            <dt className="section-index text-white/40">Año</dt>
                             <dd>{project.year}</dd>
                         </div>
                         <div>
-                            <dt className="section-index !text-white/50">Ubicación</dt>
+                            <dt className="section-index text-white/40">Ubicación</dt>
                             <dd>{project.location || '—'}</dd>
                         </div>
                     </dl>
@@ -132,14 +132,64 @@ export default function ProjectDetailPage() {
             ) : null}
 
             {project.images?.length ? (
-                <section className="bg-ink px-5 py-20 lg:px-8">
+                <section className="bg-[#050610] text-white px-5 py-20 lg:px-8 border-y border-white/10">
                     <div className="mx-auto max-w-6xl">
-                        <p className="section-index text-white/50">Galería</p>
-                        <div className="mt-8 grid gap-4 md:grid-cols-2">
+                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+                            <div>
+                                <p className="section-index text-sky-400">Capturas & Galería del Proyecto</p>
+                                <h2 className="mt-2 font-display text-3xl font-bold text-white">Vistas y arquitectura de la plataforma</h2>
+                            </div>
+                            <span className="text-xs font-mono text-slate-400 bg-white/5 border border-white/10 px-3 py-1.5 rounded-md self-start sm:self-auto">
+                                {project.images.length} {project.images.length === 1 ? 'captura' : 'capturas'}
+                            </span>
+                        </div>
+
+                        {project.images.length >= 2 ? (
+                            <div className="w-full rounded-2xl border border-white/10 bg-slate-950/70 p-2 sm:p-4 backdrop-blur-xl shadow-2xl mb-12">
+                                <div style={{ width: '100%', height: '520px', position: 'relative' }}>
+                                    <FlexCarousel
+                                        items={project.images.map((img) => ({
+                                            src: img.url,
+                                            alt: img.alt || project.name,
+                                            title: img.caption || project.name,
+                                            subtitle: project.title || 'QUILAB Module',
+                                        }))}
+                                        preset="liquid"
+                                        intro="rise"
+                                        cardHeight={0.5}
+                                        gap={12}
+                                        squeeze={0.2}
+                                        focusOnClick
+                                        captions
+                                        fit="natural"
+                                        radius={0}
+                                        lensWidth={0.74}
+                                        lensHeight={1.18}
+                                        tilt={62}
+                                        roundness={1}
+                                        bend={0.34}
+                                        reach={0.38}
+                                        curl="twist"
+                                        dispersion={0.45}
+                                        liquid={0}
+                                        followCursor={false}
+                                        autoplay={false}
+                                        interval={4}
+                                        captureWheel
+                                    />
+                                </div>
+                            </div>
+                        ) : null}
+
+                        <div className="grid gap-6 md:grid-cols-2">
                             {project.images.map((image) => (
-                                <figure key={image.id}>
-                                    <img src={image.url} alt={image.alt || ''} className="w-full rounded-2xl object-cover" loading="lazy" />
-                                    {image.caption ? <figcaption className="mt-2 text-xs text-white/50">{image.caption}</figcaption> : null}
+                                <figure key={image.id} className="overflow-hidden rounded-xl border border-white/10 bg-white/5">
+                                    <img src={image.url} alt={image.alt || ''} className="w-full object-cover aspect-video" loading="lazy" />
+                                    {image.caption ? (
+                                        <figcaption className="p-3 text-xs font-mono text-slate-300 border-t border-white/5 bg-black/40">
+                                            {image.caption}
+                                        </figcaption>
+                                    ) : null}
                                 </figure>
                             ))}
                         </div>
@@ -151,7 +201,7 @@ export default function ProjectDetailPage() {
                 <section className="px-5 py-20 lg:px-8">
                     <div className="mx-auto grid max-w-6xl gap-8 sm:grid-cols-3">
                         {project.results.map((result) => (
-                            <div key={result.label} className="glass-card rounded-3xl p-6">
+                            <div key={result.label} className="border-t border-border pt-5">
                                 <p className="section-index">{result.label}</p>
                                 <p className="mt-3 font-display text-4xl">{result.value}</p>
                             </div>

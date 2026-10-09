@@ -29,6 +29,10 @@ export default function ProjectFormPage() {
     const [techIds, setTechIds] = useState<number[]>([]);
     const [team, setTeam] = useState<TeamRow[]>([emptyTeam()]);
     const [saving, setSaving] = useState(false);
+    const [imageUrl, setImageUrl] = useState('');
+    const [imageCaption, setImageCaption] = useState('');
+    const [imageAlt, setImageAlt] = useState('');
+    const [addingImage, setAddingImage] = useState(false);
 
     useEffect(() => {
         api.get('/admin/meta').then((response) => setMeta(response.data));
@@ -92,6 +96,34 @@ export default function ProjectFormPage() {
         }
     }
 
+    async function addImageByUrl() {
+        if (!id) {
+            toast.push('Guarda el proyecto antes de agregar capturas o imágenes a la galería.', 'error');
+            return;
+        }
+        if (!imageUrl.trim()) {
+            toast.push('Ingresa un enlace URL válido de la captura o imagen.', 'error');
+            return;
+        }
+        setAddingImage(true);
+        try {
+            const response = await api.post(`/admin/projects/${id}/images`, {
+                url: imageUrl.trim(),
+                caption: imageCaption.trim() || undefined,
+                alt: imageAlt.trim() || undefined,
+            });
+            setImages((current) => [...current, response.data.image]);
+            setImageUrl('');
+            setImageCaption('');
+            setImageAlt('');
+            toast.push('Captura agregada exitosamente a la galería');
+        } catch (error) {
+            toast.push(errorMessage(error), 'error');
+        } finally {
+            setAddingImage(false);
+        }
+    }
+
     async function uploadImage(file: File) {
         if (!id) {
             toast.push('Guarda el proyecto antes de subir la galería.', 'error');
@@ -99,8 +131,20 @@ export default function ProjectFormPage() {
         }
         const data = new FormData();
         data.append('image', file);
-        const response = await api.post(`/admin/projects/${id}/images`, data);
-        setImages((current) => [...current, response.data.image]);
+        if (imageCaption.trim()) data.append('caption', imageCaption.trim());
+        if (imageAlt.trim()) data.append('alt', imageAlt.trim());
+        setAddingImage(true);
+        try {
+            const response = await api.post(`/admin/projects/${id}/images`, data);
+            setImages((current) => [...current, response.data.image]);
+            setImageCaption('');
+            setImageAlt('');
+            toast.push('Imagen subida correctamente');
+        } catch (error) {
+            toast.push(errorMessage(error), 'error');
+        } finally {
+            setAddingImage(false);
+        }
     }
 
     if (!meta || (id && !project)) {
@@ -234,36 +278,110 @@ export default function ProjectFormPage() {
                 </Button>
             </section>
 
-            <section className="space-y-4 border border-border bg-white p-6">
-                <p className="section-index">Galería</p>
-                <div className="grid gap-3 sm:grid-cols-3">
-                    {images.map((image) => (
-                        <div key={image.id} className="relative">
-                            <img src={image.url} alt="" className="aspect-video w-full object-cover" />
-                            {id ? (
-                                <button
-                                    type="button"
-                                    className="absolute right-2 top-2 cursor-pointer bg-white px-2 py-1 text-[10px] uppercase"
-                                    onClick={async () => {
-                                        await api.delete(`/admin/projects/${id}/images/${image.id}`);
-                                        setImages((current) => current.filter((item) => item.id !== image.id));
-                                    }}
-                                >
-                                    Quitar
-                                </button>
-                            ) : null}
-                        </div>
-                    ))}
+            <section className="space-y-6 border border-border bg-white p-6 rounded-lg shadow-xs">
+                <div>
+                    <div className="flex items-center justify-between">
+                        <p className="section-index text-sky-600">Galería & Capturas de Proyectos (Para FlexCarousel & Detalle)</p>
+                        <span className="text-xs font-mono text-muted-foreground">{images.length} {images.length === 1 ? 'captura' : 'capturas'}</span>
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                        Añade capturas de pantalla, vistas de la app o diagramas de arquitectura ingresando un enlace (URL) o subiendo un archivo. Estas imágenes alimentan interactivamente el componente <strong>FlexCarousel</strong> en la Landing Page y la vista de detalle.
+                    </p>
                 </div>
-                <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) uploadImage(file);
-                        e.target.value = '';
-                    }}
-                />
+
+                {/* Form to add by URL */}
+                <div className="rounded-lg border border-border/80 bg-slate-50/60 p-4 space-y-3">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-700">Añadir captura por Enlace / URL</p>
+                    <div className="grid gap-3 sm:grid-cols-12">
+                        <div className="sm:col-span-6">
+                            <Input
+                                placeholder="https://ejemplo.com/captura-proyecto.png"
+                                value={imageUrl}
+                                onChange={(e) => setImageUrl(e.target.value)}
+                                disabled={addingImage}
+                            />
+                        </div>
+                        <div className="sm:col-span-3">
+                            <Input
+                                placeholder="Título / Módulo (opcional)"
+                                value={imageCaption}
+                                onChange={(e) => setImageCaption(e.target.value)}
+                                disabled={addingImage}
+                            />
+                        </div>
+                        <div className="sm:col-span-3">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={addImageByUrl}
+                                disabled={addingImage || !imageUrl.trim()}
+                                className="w-full text-xs font-medium"
+                            >
+                                {addingImage ? 'Guardando…' : '+ Agregar por URL'}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Form to upload local file */}
+                <div className="flex items-center gap-4 pt-1">
+                    <span className="text-xs font-mono text-muted-foreground uppercase">O subir archivo local:</span>
+                    <Input
+                        type="file"
+                        accept="image/*"
+                        className="max-w-xs text-xs"
+                        disabled={addingImage}
+                        onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) uploadImage(file);
+                            e.target.value = '';
+                        }}
+                    />
+                </div>
+
+                {/* Grid of gallery images */}
+                {images.length > 0 ? (
+                    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 pt-2">
+                        {images.map((image, index) => (
+                            <div key={image.id} className="group relative overflow-hidden rounded-lg border border-border bg-slate-900 shadow-sm">
+                                <img
+                                    src={image.url}
+                                    alt={image.alt || ''}
+                                    className="aspect-video w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                />
+                                <div className="p-2.5 bg-white text-xs space-y-1">
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-mono text-[10px] text-muted-foreground uppercase">#{index + 1}</span>
+                                        {id ? (
+                                            <button
+                                                type="button"
+                                                className="cursor-pointer text-red-600 hover:text-red-700 text-[11px] font-semibold"
+                                                onClick={async () => {
+                                                    if (!confirm('¿Eliminar esta captura de la galería?')) return;
+                                                    await api.delete(`/admin/projects/${id}/images/${image.id}`);
+                                                    setImages((current) => current.filter((item) => item.id !== image.id));
+                                                    toast.push('Captura eliminada');
+                                                }}
+                                            >
+                                                Eliminar
+                                            </button>
+                                        ) : null}
+                                    </div>
+                                    <p className="font-medium text-slate-800 truncate" title={image.caption || 'Sin título'}>
+                                        {image.caption || <span className="text-muted-foreground italic">Sin título</span>}
+                                    </p>
+                                    <p className="font-mono text-[10px] text-slate-400 truncate" title={image.url}>
+                                        {image.url}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-xs text-slate-400 italic py-2">
+                        No hay capturas registradas en este proyecto aún. Agrega una arriba mediante link o archivo local.
+                    </p>
+                )}
             </section>
 
             <section className="flex flex-wrap items-center gap-6 border border-border bg-white p-6">

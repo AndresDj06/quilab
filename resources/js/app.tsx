@@ -23,6 +23,8 @@ const MemberFormPage = lazy(() => import('@/pages/admin/MemberFormPage'));
 const AdminUsersPage = lazy(() => import('@/pages/admin/AdminUsersPage'));
 const AdminMessagesPage = lazy(() => import('@/pages/admin/AdminMessagesPage'));
 
+const ADMIN_ACCESS_SLUG = (import.meta.env.VITE_ADMIN_ACCESS_SLUG as string) || 'acceso-consorcio';
+
 function Fallback() {
     return <div className="grid min-h-[50vh] place-items-center text-sm text-muted-foreground">Cargando…</div>;
 }
@@ -41,7 +43,12 @@ createRoot(document.getElementById('app')!).render(
                             <Route path="/equipo" element={<TeamPage />} />
                             <Route path="/contacto" element={<ContactPage />} />
                         </Route>
-                        <Route path="/login" element={<LoginPage />} />
+
+                        {/* WPS Hide Login - Ruta secreta configurada */}
+                        <Route path={`/${ADMIN_ACCESS_SLUG}`} element={<LoginPage />} />
+                        {/* Trampa: intento de acceso a /login redirige al Home simulando inexistencia */}
+                        <Route path="/login" element={<Navigate to="/" replace />} />
+
                         <Route path="/admin" element={<AdminLayout />}>
                             <Route index element={<DashboardPage />} />
                             <Route path="proyectos" element={<AdminProjectsPage />} />

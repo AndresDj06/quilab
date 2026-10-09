@@ -15,7 +15,7 @@ export default function TeamPage() {
     }, []);
 
     return (
-        <div className="bg-background pt-10">
+        <div className="bg-white pt-10">
             <Seo title="Equipo" description="Profesionales de QUILAB: ingeniería, diseño, datos y producto." />
             <div className="mx-auto max-w-6xl px-5 lg:px-8">
                 <p className="section-index">Personas</p>

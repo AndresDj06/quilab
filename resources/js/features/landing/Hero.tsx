@@ -1,40 +1,137 @@
-import { Link } from 'react-router-dom';
-import { AmbientField } from '@/components/AmbientField';
 import { HeroGrid } from '@/components/HeroGrid';
+import GlowCursor from '@/components/GlowCursor';
+import TechText from '@/components/TechText';
+import VaporType from '@/components/VaporType';
+import SpecularButton from '@/components/SpecularButton';
+import { ArrowRight, Code2, Cpu, Database, Layers } from 'lucide-react';
+
+const techBadges = [
+    { icon: Code2, label: 'Full-Stack Architecture' },
+    { icon: Layers, label: 'Cloud & Kubernetes' },
+    { icon: Database, label: 'Distributed Systems' },
+    { icon: Cpu, label: 'AI & Data Pipelines' },
+];
 
 export function Hero() {
     return (
-        <section className="relative min-h-[100svh] overflow-hidden bg-ink text-white">
+        <section className="relative min-h-[88svh] bg-[#050610] text-white flex flex-col justify-center overflow-hidden">
             <HeroGrid />
-            <AmbientField />
-            <div className="relative mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-end px-5 pb-16 pt-32 lg:px-8 lg:pb-24">
-                <div className="glass-nav-dark mb-8 inline-flex w-fit items-center gap-3 rounded-full px-4 py-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-teal" />
-                    <p className="section-index !text-white/70">Consorcio de software · 001</p>
+
+            <GlowCursor
+                color="#67E8F9"
+                secondaryColor="#A78BFA"
+                trailLength={40}
+                trailWidth={8}
+                trailTaper={0.8}
+                followSpeed={0.16}
+                glowIntensity={1.9}
+                glowSpread={1.2}
+                hotspot={0.65}
+                brightness={1.25}
+                opacity={1}
+                pulseSpeed={1.1}
+                noiseStrength={0.035}
+                idleFade
+                idleTimeout={700}
+                fadeDuration={900}
+                blendMode="screen"
+                className="relative z-10 flex-1 flex flex-col justify-center"
+            >
+                <div className="relative mx-auto w-full max-w-7xl px-5 py-12 lg:px-8 lg:py-20">
+                    <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
+                        {/* Left Column: Floating Headline & Introduction */}
+                        <div className="lg:col-span-7 flex flex-col justify-center">
+                            {/* Headline */}
+                            <h1 className="font-display text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl lg:leading-[1.16]">
+                                Construimos software de{' '}
+                                <VaporType
+                                    align="start"
+                                    words={['alto impacto', 'gran alcance', 'alto rendimiento', 'gran valor']}
+                                    color="#38bdf8"
+                                    vaporColor="#67e8f9"
+                                    sweep="left"
+                                    spread={1.3}
+                                    rise={1.1}
+                                    turbulence={0.8}
+                                    density={1.3}
+                                    condense={1.5}
+                                    hold={2.4}
+                                    dissolve={1.7}
+                                    className="font-bold text-sky-400 drop-shadow-[0_0_15px_rgba(56,189,248,0.35)]"
+                                />{' '}
+                                <span className="inline-block">y arquitectura escalable.</span>
+                            </h1>
+
+                            {/* Subtitle */}
+                            <p className="mt-5 text-sm sm:text-base lg:text-lg leading-relaxed text-slate-300/90 max-w-2xl">
+                                QUILAB reúne escuadras especializadas de ingenieros senior, arquitectos de software y líderes de producto para diseñar, desarrollar y desplegar plataformas digitales de misión crítica.
+                            </p>
+
+                            {/* Dynamic Tech Pods */}
+                            <div className="mt-6 flex flex-wrap items-center gap-2">
+                                {techBadges.map((badge, idx) => {
+                                    const Icon = badge.icon;
+                                    return (
+                                        <div
+                                            key={idx}
+                                            className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-mono text-slate-300 backdrop-blur-sm transition-colors hover:border-sky-400/40 hover:text-white"
+                                        >
+                                            <Icon size={14} className="text-sky-400" />
+                                            <span>{badge.label}</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Action Buttons using SpecularButton */}
+                            <div className="mt-8 flex flex-col gap-3.5 sm:flex-row sm:items-center">
+                                <SpecularButton
+                                    to="/proyectos"
+                                    variant="primary"
+                                    size="md"
+                                    radius={12}
+                                    className="font-mono text-xs font-bold tracking-wider uppercase"
+                                >
+                                    <span>Explorar Proyectos</span>
+                                    <ArrowRight size={15} />
+                                </SpecularButton>
+
+                                <SpecularButton
+                                    to="/nosotros"
+                                    variant="secondary"
+                                    size="md"
+                                    radius={12}
+                                    className="font-mono text-xs font-semibold tracking-wider uppercase"
+                                >
+                                    <span>Conocer el Consorcio</span>
+                                </SpecularButton>
+                            </div>
+                        </div>
+
+                        {/* Right Column: Floating Interactive Stage for <quilab> */}
+                        <div className="lg:col-span-5">
+                            <div className="relative flex flex-col items-center justify-center rounded-2xl border border-white/10 bg-slate-950/65 p-6 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.6),0_0_30px_rgba(56,189,248,0.1)] overflow-hidden min-h-[300px] sm:min-h-[380px] lg:min-h-[440px]">
+                                {/* Radial Glow Effect */}
+                                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(56,189,248,0.15),transparent_70%)]" />
+
+                                <div className="relative w-full h-[240px] sm:h-[320px] select-none">
+                                    <TechText
+                                        text="<quilab>"
+                                        fontWeight={600}
+                                        fontSize={150}
+                                        reveal="letter"
+                                        dashLength={4}
+                                        dashGap={2}
+                                        specks={15}
+                                        color="#ffffff"
+                                        accentColor="#38bdf8"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <h1 className="mt-2 max-w-4xl font-display text-[2.4rem] leading-[0.95] sm:text-5xl lg:text-[4.6rem]">
-                    Construimos soluciones digitales que convierten ideas en{' '}
-                    <span className="text-gradient-gold">productos</span>.
-                </h1>
-                <p className="mt-8 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
-                    Somos una red organizada de profesionales —ingeniería, diseño, datos y producto— que se reúne para desarrollar
-                    software de alto nivel, con método y una estética precisa.
-                </p>
-                <div className="mt-10 flex flex-col gap-3 sm:flex-row">
-                    <Link
-                        to="/proyectos"
-                        className="btn-gold inline-flex h-12 items-center justify-center rounded-full px-7 text-xs tracking-[0.16em] uppercase transition-[filter,box-shadow] duration-200"
-                    >
-                        Ver proyectos
-                    </Link>
-                    <Link
-                        to="/equipo"
-                        className="btn-glass inline-flex h-12 items-center justify-center rounded-full px-7 text-xs tracking-[0.16em] uppercase text-white transition-colors duration-200"
-                    >
-                        Conocer el equipo
-                    </Link>
-                </div>
-            </div>
+            </GlowCursor>
         </section>
     );
 }

@@ -7,7 +7,7 @@ export default function PublicLayout() {
     const home = pathname === '/';
 
     return (
-        <div className={home ? 'bg-ink' : 'relative min-h-screen bg-background'}>
+        <div className={home ? 'bg-ink' : 'bg-background'}>
             <Navbar />
             <main>
                 <Outlet />

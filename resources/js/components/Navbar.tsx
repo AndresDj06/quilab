@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Terminal, ArrowUpRight } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
+import SpecularButton from '@/components/SpecularButton';
 import { cn } from '@/lib/utils';
 
 const links = [
     { to: '/', label: 'Inicio' },
-    { to: '/proyectos', label: 'Proyectos' },
-    { to: '/nosotros', label: 'Nosotros' },
-    { to: '/equipo', label: 'Equipo' },
+    { to: '/proyectos', label: 'Proyectos & Casos' },
+    { to: '/nosotros', label: 'Consorcio' },
+    { to: '/equipo', label: 'Ingeniería' },
     { to: '/contacto', label: 'Contacto' },
 ];
 
@@ -20,7 +21,7 @@ export function Navbar() {
     const dark = isHome && !scrolled && !open;
 
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > window.innerHeight * 0.68);
+        const onScroll = () => setScrolled(window.scrollY > 20);
         onScroll();
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
@@ -31,21 +32,17 @@ export function Navbar() {
     }, [location.pathname]);
 
     return (
-        <header className="sticky top-0 z-50">
-            <div
-                className={cn(
-                    'pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b to-transparent',
-                    dark ? 'from-ink/80' : 'from-background/90',
-                )}
-            />
-            <div className="relative px-3 pt-3 lg:px-6">
-            <div
-                className={cn(
-                    'mx-auto flex h-[4.25rem] max-w-6xl items-center justify-between rounded-full px-5 transition-colors duration-300 lg:px-6',
-                    dark ? 'glass-nav-dark text-white' : 'glass-nav text-foreground',
-                )}
-            >
+        <header
+            className={cn(
+                'sticky top-0 z-50 transition-all duration-300',
+                dark
+                    ? 'bg-ink/75 border-b border-white/10 text-white backdrop-blur-md'
+                    : 'border-b border-border bg-background/90 text-foreground backdrop-blur-md shadow-xs',
+            )}
+        >
+            <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 lg:px-8">
                 <BrandLogo inverted={dark} />
+                
                 <nav className="hidden items-center gap-7 lg:flex" aria-label="Principal">
                     {links.map((link) => (
                         <NavLink
@@ -53,50 +50,98 @@ export function Navbar() {
                             to={link.to}
                             className={({ isActive }) =>
                                 cn(
-                                    'relative text-[13px] tracking-wide transition-colors',
-                                    dark ? 'text-white/70 hover:text-white' : 'text-muted-foreground hover:text-foreground',
-                                    isActive && (dark ? 'text-white' : 'text-foreground'),
-                                    isActive && 'after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:bg-gradient-to-r after:from-gold after:to-teal',
+                                    'group relative py-1 text-sm font-medium tracking-wide transition-all duration-300',
+                                    dark
+                                        ? 'text-slate-300/85 hover:text-sky-200 hover:drop-shadow-[0_0_10px_rgba(56,189,248,0.7)]'
+                                        : 'text-slate-600 hover:text-slate-900 hover:drop-shadow-[0_0_8px_rgba(14,165,233,0.45)]',
+                                    isActive &&
+                                        (dark
+                                            ? 'text-white font-semibold drop-shadow-[0_0_10px_rgba(56,189,248,0.6)]'
+                                            : 'text-slate-950 font-semibold'),
                                 )
                             }
                         >
-                            {link.label}
+                            {({ isActive }) => (
+                                <>
+                                    {/* Soft ambient illumination on hover */}
+                                    <span
+                                        aria-hidden="true"
+                                        className="pointer-events-none absolute inset-x-[-6px] -inset-y-1 rounded-md bg-sky-400/0 opacity-0 blur-md transition-all duration-300 group-hover:bg-sky-400/15 group-hover:opacity-100"
+                                    />
+                                    <span className="relative z-10">{link.label}</span>
+                                    {isActive && (
+                                        <span
+                                            aria-hidden="true"
+                                            className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4/5 h-[1.5px] bg-gradient-to-r from-transparent via-sky-400 to-transparent shadow-[0_0_8px_rgba(56,189,248,0.8)]"
+                                        />
+                                    )}
+                                </>
+                            )}
                         </NavLink>
                     ))}
                 </nav>
-                <Link
-                    to="/contacto"
-                    className={cn(
-                        'hidden h-10 items-center rounded-full px-5 text-xs tracking-[0.14em] uppercase lg:inline-flex btn-gold',
-                    )}
-                >
-                    Trabajemos juntos
-                </Link>
+
+                <div className="hidden items-center gap-3 lg:flex">
+                    <SpecularButton
+                        to="/contacto"
+                        variant={dark ? 'primary' : 'secondary'}
+                        size="sm"
+                        radius={10}
+                        className="text-xs font-semibold tracking-wide"
+                    >
+                        <span>Iniciar Proyecto</span>
+                        <ArrowUpRight size={14} />
+                    </SpecularButton>
+                </div>
+
                 <button
                     type="button"
-                    className="grid h-10 w-10 cursor-pointer place-items-center rounded-full lg:hidden"
+                    className={cn(
+                        'grid h-9 w-9 cursor-pointer place-items-center rounded-lg border lg:hidden transition-colors',
+                        dark ? 'border-white/20 text-white hover:bg-white/10' : 'border-border text-foreground hover:bg-slate-100'
+                    )}
                     aria-expanded={open}
                     aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
                     onClick={() => setOpen((value) => !value)}
                 >
-                    {open ? <X size={20} /> : <Menu size={20} />}
+                    {open ? <X size={18} /> : <Menu size={18} />}
                 </button>
             </div>
+
             {open ? (
-                <div className="glass-nav-dark mx-auto mt-2 max-w-6xl rounded-[1.75rem] px-5 py-8 text-white lg:hidden">
-                    <nav className="flex flex-col gap-5" aria-label="Móvil">
+                <div className="border-t border-white/10 bg-ink px-5 py-6 text-white lg:hidden animate-in fade-in slide-in-from-top-4 duration-200">
+                    <nav className="flex flex-col gap-3" aria-label="Móvil">
                         {links.map((link) => (
-                            <NavLink key={link.to} to={link.to} className="text-lg">
+                            <NavLink
+                                key={link.to}
+                                to={link.to}
+                                className={({ isActive }) =>
+                                    cn(
+                                        'py-2.5 text-base font-medium tracking-wide transition-all duration-300',
+                                        isActive
+                                            ? 'text-sky-300 font-semibold drop-shadow-[0_0_10px_rgba(56,189,248,0.7)]'
+                                            : 'text-slate-300 hover:text-white hover:drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]'
+                                    )
+                                }
+                            >
                                 {link.label}
                             </NavLink>
                         ))}
-                        <Link to="/contacto" className="mt-2 text-sm tracking-[0.16em] uppercase text-gold">
-                            Trabajemos juntos
-                        </Link>
+                        <div className="pt-3 mt-2 border-t border-white/10">
+                            <SpecularButton
+                                to="/contacto"
+                                variant="primary"
+                                size="sm"
+                                radius={10}
+                                className="w-full text-xs font-semibold uppercase tracking-wider"
+                            >
+                                <span>Iniciar Proyecto</span>
+                                <ArrowUpRight size={15} />
+                            </SpecularButton>
+                        </div>
                     </nav>
                 </div>
             ) : null}
-            </div>
         </header>
     );
 }

@@ -31,8 +31,8 @@ export function Modal({
 
     return (
         <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
-            <button type="button" className="absolute inset-0 cursor-pointer bg-ink/50 backdrop-blur-md" aria-label="Cerrar" onClick={onClose} />
-            <div role="dialog" aria-modal="true" className="glass-panel relative w-full max-w-md rounded-3xl p-6">
+            <button type="button" className="absolute inset-0 cursor-pointer bg-ink/50" aria-label="Cerrar" onClick={onClose} />
+            <div role="dialog" aria-modal="true" className="relative w-full max-w-md border border-border bg-white p-6 shadow-xl">
                 <h2 className="font-display text-2xl">{title}</h2>
                 <div className="mt-3 text-sm leading-relaxed text-muted-foreground">{children}</div>
                 <div className="mt-6 flex justify-end gap-3">
