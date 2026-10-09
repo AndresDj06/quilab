@@ -72,15 +72,37 @@ export interface TechTextConfig {
     accentColor: string;
 }
 
+export interface DarkVeilConfig {
+    hueShift: number;
+    speed: number;
+    scanlineFrequency: number;
+    warpAmount: number;
+    noiseIntensity: number;
+    scanlineIntensity: number;
+    resolutionScale: number;
+    lightMode: boolean;
+}
+
 export interface CreativeState {
     plasmaWave: PlasmaWaveConfig;
     glowCursor: GlowCursorConfig;
     vaporType: VaporTypeConfig;
     heroGrid: HeroGridConfig;
     techText: TechTextConfig;
+    darkVeil: DarkVeilConfig;
 }
 
 export const defaultCreativeConfig: CreativeState = {
+    darkVeil: {
+        hueShift: 43,
+        speed: 0.9,
+        scanlineFrequency: 3.1,
+        warpAmount: 4.7,
+        noiseIntensity: 0.04,
+        scanlineIntensity: 0.2,
+        resolutionScale: 1,
+        lightMode: false,
+    },
     plasmaWave: {
         color1: '#A855F7',
         color2: '#06B6D4',
@@ -175,6 +197,7 @@ export function CreativeProvider({ children }: { children: React.ReactNode }) {
                     vaporType: { ...defaultCreativeConfig.vaporType, ...(parsed.vaporType || {}) },
                     heroGrid: { ...defaultCreativeConfig.heroGrid, ...(parsed.heroGrid || {}) },
                     techText: { ...defaultCreativeConfig.techText, ...(parsed.techText || {}) },
+                    darkVeil: { ...defaultCreativeConfig.darkVeil, ...(parsed.darkVeil || {}) },
                 };
             }
         } catch {

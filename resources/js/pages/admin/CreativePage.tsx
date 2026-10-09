@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCreative } from '@/context/CreativeContext';
 import { useToast } from '@/context/ToastContext';
 import { PlasmaWave } from '@/components/PlasmaWave';
+import { DarkVeil } from '@/components/DarkVeil';
 import GlowCursor from '@/components/GlowCursor';
 import VaporType from '@/components/VaporType';
 import { 
@@ -14,11 +15,12 @@ import {
     Copy, 
     Check, 
     SlidersHorizontal,
-    ExternalLink
+    ExternalLink,
+    Shield
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type CreativeTab = 'plasmaWave' | 'glowCursor' | 'vaporType' | 'heroGrid';
+type CreativeTab = 'plasmaWave' | 'darkVeil' | 'glowCursor' | 'vaporType' | 'heroGrid';
 
 export default function CreativePage() {
     const { config, updateModule, resetModule, resetAll, saveConfig } = useCreative();
@@ -49,6 +51,15 @@ export default function CreativePage() {
   bend2={${config.plasmaWave.blendSoftness * 10}}
   dir2={1.0}
   rotationDeg={${config.plasmaWave.rotationAmount}}
+/>`;
+        } else if (activeTab === 'darkVeil') {
+            code = `<DarkVeil
+  hueShift={${config.darkVeil.hueShift}}
+  speed={${config.darkVeil.speed}}
+  scanlineFrequency={${config.darkVeil.scanlineFrequency}}
+  warpAmount={${config.darkVeil.warpAmount}}
+  noiseIntensity={${config.darkVeil.noiseIntensity}}
+  scanlineIntensity={${config.darkVeil.scanlineIntensity}}
 />`;
         } else if (activeTab === 'glowCursor') {
             code = `<GlowCursor
@@ -132,6 +143,7 @@ export default function CreativePage() {
             <div className="flex flex-wrap items-center gap-2 border-b border-border pb-3">
                 {[
                     { id: 'plasmaWave', label: 'PlasmaWave (Shader WebGL)', icon: Sparkles },
+                    { id: 'darkVeil', label: 'DarkVeil (Fondo Proyectos)', icon: Sparkles },
                     { id: 'glowCursor', label: 'GlowCursor (Puntero Reactivo)', icon: Eye },
                     { id: 'vaporType', label: 'VaporType (Condensación de Texto)', icon: Code2 },
                     { id: 'heroGrid', label: 'HeroGrid (Matriz y Conexiones)', icon: Layers },
@@ -183,6 +195,26 @@ export default function CreativePage() {
                                 rotationDeg={config.plasmaWave.rotationAmount}
                                 lightMode={config.plasmaWave.lightMode}
                             />
+                        </div>
+                    )}
+
+                    {activeTab === 'darkVeil' && (
+                        <div className="absolute inset-0">
+                            <DarkVeil
+                                hueShift={config.darkVeil.hueShift}
+                                speed={config.darkVeil.speed}
+                                scanlineFrequency={config.darkVeil.scanlineFrequency}
+                                warpAmount={config.darkVeil.warpAmount}
+                                noiseIntensity={config.darkVeil.noiseIntensity}
+                                scanlineIntensity={config.darkVeil.scanlineIntensity}
+                                resolutionScale={config.darkVeil.resolutionScale}
+                                lightMode={config.darkVeil.lightMode}
+                            />
+                            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center pointer-events-none">
+                                <span className="font-mono text-xs uppercase tracking-widest text-sky-400 bg-black/60 px-3.5 py-1.5 rounded-full border border-sky-500/30 backdrop-blur-sm">
+                                    INFRAESTRUCTURA DE PROYECTOS // DARKVEIL SHADER
+                                </span>
+                            </div>
                         </div>
                     )}
 
@@ -470,6 +502,73 @@ export default function CreativePage() {
                             label="Light Mode"
                             value={config.plasmaWave.lightMode}
                             onChange={(val) => updateModule('plasmaWave', { lightMode: val })}
+                        />
+                    </div>
+                )}
+
+                {/* DarkVeil Controls */}
+                {activeTab === 'darkVeil' && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-3.5">
+                        <SliderControl
+                            label="Hue Shift"
+                            value={config.darkVeil.hueShift}
+                            min={0}
+                            max={360}
+                            step={1}
+                            onChange={(val) => updateModule('darkVeil', { hueShift: val })}
+                        />
+                        <SliderControl
+                            label="Speed"
+                            value={config.darkVeil.speed}
+                            min={0.1}
+                            max={3.0}
+                            step={0.05}
+                            onChange={(val) => updateModule('darkVeil', { speed: val })}
+                        />
+                        <SliderControl
+                            label="Scanline Freq"
+                            value={config.darkVeil.scanlineFrequency}
+                            min={0}
+                            max={10}
+                            step={0.1}
+                            onChange={(val) => updateModule('darkVeil', { scanlineFrequency: val })}
+                        />
+                        <SliderControl
+                            label="Warp Amount"
+                            value={config.darkVeil.warpAmount}
+                            min={0}
+                            max={10}
+                            step={0.1}
+                            onChange={(val) => updateModule('darkVeil', { warpAmount: val })}
+                        />
+                        <SliderControl
+                            label="Noise Intensity"
+                            value={config.darkVeil.noiseIntensity}
+                            min={0}
+                            max={0.5}
+                            step={0.01}
+                            onChange={(val) => updateModule('darkVeil', { noiseIntensity: val })}
+                        />
+                        <SliderControl
+                            label="Scanline Intensity"
+                            value={config.darkVeil.scanlineIntensity}
+                            min={0}
+                            max={1.0}
+                            step={0.05}
+                            onChange={(val) => updateModule('darkVeil', { scanlineIntensity: val })}
+                        />
+                        <SliderControl
+                            label="Resolution Scale"
+                            value={config.darkVeil.resolutionScale}
+                            min={0.5}
+                            max={2.0}
+                            step={0.1}
+                            onChange={(val) => updateModule('darkVeil', { resolutionScale: val })}
+                        />
+                        <ToggleControl
+                            label="Light Mode"
+                            value={config.darkVeil.lightMode}
+                            onChange={(val) => updateModule('darkVeil', { lightMode: val })}
                         />
                     </div>
                 )}
