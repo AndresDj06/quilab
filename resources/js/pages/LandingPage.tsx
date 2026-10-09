@@ -33,8 +33,8 @@ export default function LandingPage() {
                 {/* Ambient subtle glow at the top matching hero */}
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_80%_at_50%_0%,rgba(56,189,248,0.09),transparent_70%)]" />
 
-                <div className="relative mx-auto max-w-6xl px-5 pt-12 pb-10 lg:px-8">
-                    <dl className="grid grid-cols-2 gap-8 lg:grid-cols-4">
+                <div className="relative mx-auto w-full max-w-7xl px-6 sm:px-10 lg:px-12 xl:px-16 pt-20 sm:pt-28 pb-16 sm:pb-20 lg:pt-32 lg:pb-24">
+                    <dl className="grid grid-cols-2 gap-8 sm:gap-12 lg:grid-cols-4 lg:gap-10 xl:gap-14">
                         {[
                             [data?.stats?.projects ?? '5', 'Proyectos Desarrollados', 'Plataformas & Apps'],
                             [data?.stats?.members ?? '8', 'Ingenieros & Especialistas', 'Consorcio Activo'],
@@ -44,13 +44,13 @@ export default function LandingPage() {
                             const Icon = statIcons[index] || Code2;
                             return (
                                 <ScrollReveal key={String(label)} delay={index * 90}>
-                                    <div className="group border-l-2 border-sky-500/35 pl-5 transition-all duration-300 hover:border-sky-400">
-                                        <div className="flex items-center gap-2 text-sky-400 mb-1.5">
-                                            <Icon size={15} />
-                                            <span className="font-mono text-[11px] tracking-wider uppercase text-slate-400">{sub}</span>
+                                    <div className="group border-l-2 lg:border-l-[3px] border-sky-500/40 pl-6 sm:pl-7 lg:pl-8 py-2 transition-all duration-300 hover:border-sky-400 hover:translate-x-1">
+                                        <div className="flex items-center gap-2.5 text-sky-400 mb-2.5">
+                                            <Icon size={18} className="shrink-0" />
+                                            <span className="font-mono text-xs sm:text-[13px] tracking-wider uppercase text-slate-300 font-semibold">{sub}</span>
                                         </div>
-                                        <dd className="font-display text-3xl font-bold tracking-tight text-white lg:text-4xl drop-shadow-[0_0_12px_rgba(56,189,248,0.2)]">{value}</dd>
-                                        <dt className="mt-1 text-xs font-medium text-slate-400">{label}</dt>
+                                        <dd className="font-display text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-none drop-shadow-[0_0_24px_rgba(56,189,248,0.3)]">{value}</dd>
+                                        <dt className="mt-3 text-sm sm:text-base font-medium text-slate-300 leading-snug">{label}</dt>
                                     </div>
                                 </ScrollReveal>
                             );
@@ -60,7 +60,7 @@ export default function LandingPage() {
 
                 {/* Seamless Chromatic Color Grading Transition from dark into pure white */}
                 <div
-                    className="h-28 sm:h-44 w-full pointer-events-none"
+                    className="h-32 sm:h-48 w-full pointer-events-none"
                     style={{
                         background: 'linear-gradient(180deg, #050610 0%, #071120 22%, #0e1e36 44%, #1e2e4a 62%, #425575 76%, #8fa3c4 88%, #dce4f0 95%, #ffffff 100%)'
                     }}

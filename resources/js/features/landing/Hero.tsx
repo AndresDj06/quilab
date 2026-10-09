@@ -14,7 +14,7 @@ const techBadges = [
 
 export function Hero() {
     return (
-        <section className="relative min-h-[88svh] bg-[#050610] text-white flex flex-col justify-center overflow-hidden">
+        <section className="relative min-h-[calc(100vh-4rem)] min-h-[calc(100dvh-4rem)] bg-[#050610] text-white flex flex-col justify-center overflow-hidden">
             <HeroGrid />
 
             <GlowCursor
@@ -37,7 +37,7 @@ export function Hero() {
                 blendMode="screen"
                 className="relative z-10 flex-1 flex flex-col justify-center"
             >
-                <div className="relative mx-auto w-full max-w-7xl px-5 py-12 lg:px-8 lg:py-20">
+                <div className="relative mx-auto w-full max-w-7xl px-5 py-8 sm:py-12 lg:px-8 lg:py-16">
                     <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
                         {/* Left Column: Floating Headline & Introduction */}
                         <div className="lg:col-span-7 flex flex-col justify-center">
