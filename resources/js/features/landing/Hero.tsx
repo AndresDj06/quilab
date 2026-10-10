@@ -47,45 +47,24 @@ export function Hero({ stats }: HeroProps) {
             label: 'Entregas en Producción',
             sub: '100% Verificadas',
             icon: Award,
-            glowColor: 'rgba(16,185,129,0.28)',
+            glowColor: 'rgba(168,85,247,0.28)',
         },
         {
             value: stats?.years ?? '3',
             label: 'Años de Trayectoria',
             sub: 'I+D & Software',
             icon: Code2,
-            glowColor: 'rgba(168,85,247,0.28)',
+            glowColor: 'rgba(16,185,129,0.28)',
         },
     ];
 
     return (
         <section className="relative bg-[#050610] text-white overflow-hidden">
-            {/* Unified Combined Background for the Entire Hero and Stats */}
-            <div className="pointer-events-none absolute inset-0 z-0">
-                {/* 1. DarkVeil WebGL Procedural Shader Canvas across the full Hero */}
-                <div className="absolute inset-0 opacity-75">
-                    <DarkVeil
-                        hueShift={config.darkVeil.hueShift}
-                        speed={config.darkVeil.speed}
-                        scanlineFrequency={config.darkVeil.scanlineFrequency}
-                        warpAmount={config.darkVeil.warpAmount}
-                        noiseIntensity={config.darkVeil.noiseIntensity}
-                        scanlineIntensity={config.darkVeil.scanlineIntensity}
-                        resolutionScale={config.darkVeil.resolutionScale}
-                        lightMode={config.darkVeil.lightMode}
-                    />
-                </div>
+            {/* Viewport 1: Hero Main Stage with its original HeroGrid background */}
+            <div className="relative min-h-[calc(100vh-4rem)] min-h-[calc(100dvh-4rem)] flex flex-col justify-center overflow-hidden">
+                {/* Hero's original background: Interactive Cybernetic Connection Grid */}
+                <HeroGrid />
 
-                {/* 2. Overlaid Parametric Grid & Node Network on transparent canvas */}
-                <HeroGrid transparent={true} />
-
-                {/* 3. Smooth Atmospheric Depth and Color Grading */}
-                <div className="absolute inset-0 bg-gradient-to-b from-[#050610]/80 via-[#050610]/45 to-[#050610]/85" />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_35%,transparent_25%,rgba(5,6,16,0.65)_100%)]" />
-            </div>
-
-            {/* Viewport 1: Hero Main Stage (Fills 100% of the screen/tab on load) */}
-            <div className="relative z-10 min-h-[calc(100vh-4rem)] min-h-[calc(100dvh-4rem)] flex flex-col justify-center">
                 <GlowCursor
                     color={config.glowCursor.color1}
                     secondaryColor={config.glowCursor.color2}
@@ -199,11 +178,35 @@ export function Hero({ stats }: HeroProps) {
                         </div>
                     </div>
                 </GlowCursor>
+
+                {/* Smooth blend gradient at the bottom of the hero stage transitioning into stats */}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent via-[#050610]/70 to-[#050610] z-20" />
             </div>
 
-            {/* Continuous Second Fold: Liquid Glass Stats Sharing the Same Unified Background */}
-            <div className="relative z-10 w-full pt-4 pb-16 lg:pt-8 lg:pb-24">
-                <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
+            {/* Viewport 2: Stats Section combined into the Hero with DarkVeil background */}
+            <div className="relative z-10 w-full pt-10 pb-16 lg:pt-14 lg:pb-24 overflow-hidden">
+                {/* DarkVeil Background combined smoothly with the Hero above via color grading & gradient mask */}
+                <div className="pointer-events-none absolute inset-0 z-0">
+                    {/* DarkVeil Canvas with soft top feathering so it blends into the Hero seamlessly */}
+                    <div className="absolute inset-0 opacity-80 [mask-image:linear-gradient(to_bottom,transparent_0%,black_80px,black_100%)] [-webkit-mask-image:linear-gradient(to_bottom,transparent_0%,black_80px,black_100%)]">
+                        <DarkVeil
+                            hueShift={config.darkVeil.hueShift}
+                            speed={config.darkVeil.speed}
+                            scanlineFrequency={config.darkVeil.scanlineFrequency}
+                            warpAmount={config.darkVeil.warpAmount}
+                            noiseIntensity={config.darkVeil.noiseIntensity}
+                            scanlineIntensity={config.darkVeil.scanlineIntensity}
+                            resolutionScale={config.darkVeil.resolutionScale}
+                            lightMode={config.darkVeil.lightMode}
+                        />
+                    </div>
+
+                    {/* Atmospheric color grading and depth vignettes */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#050610] via-[#050610]/40 to-[#050610]/85" />
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(5,6,16,0.65)_100%)]" />
+                </div>
+
+                <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-8">
                     <dl className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-7">
                         {statsList.map((item, index) => {
                             const Icon = item.icon;
